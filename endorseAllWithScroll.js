@@ -5,13 +5,16 @@ const clickDelay = 300;          // ms between clicking batches
 const endorseCheckTimeout = 8000;// ms max to wait for endorsements to register
 
 function getAllEndorseButtons() {
-  // Select all buttons, filter those with visible text "Endorse"
-  return Array.from(document.querySelectorAll('button'))
-    .filter(btn =>
-      btn.innerText.trim() === endorseText &&
-      !btn.disabled &&
-      btn.offsetParent !== null // visible
-    );
+  return Array.from(document.querySelectorAll('button.artdeco-button'))
+    .filter(btn => {
+      const span = btn.querySelector('.artdeco-button__text');
+      return (
+        span &&
+        span.innerText.trim() === endorseText &&
+        !btn.disabled &&
+        btn.offsetParent !== null // visible
+      );
+    });
 }
 
 async function clickAllEndorseButtons() {
@@ -26,10 +29,10 @@ async function clickAllEndorseButtons() {
 }
 
 function isButtonEndorsed(btn) {
-  // Button is considered "endorsed" if text changed, or button is gone/hidden
+  const span = btn.querySelector('.artdeco-button__text');
   return (
     !document.body.contains(btn) ||
-    btn.innerText.trim() === endorsedText ||
+    (span && span.innerText.trim() === endorsedText) ||
     btn.offsetParent === null
   );
 }
